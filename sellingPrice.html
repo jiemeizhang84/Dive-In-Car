@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- <link rel="icon" href="../../../../favicon.ico"> -->
+
+    <title>Selling Price</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <!-- Custom styles for this template -->
+    <link href="dashboard.css" rel="stylesheet">
+    
+  </head>
+
+  <body>
+    
+    <div class="overlay">
+
+    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+      <a class="navbar-brand " href="index.html">Home</a>
+      
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+          <div class="sidebar-sticky">
+
+            <form>
+                
+                <div class="form-group search_form">
+                  <label for="make-choice" class="search_label">
+                      <span data-feather="bold"></span>
+                      Make</label>
+                  <input list="make-list" id="search-choice" name="make-choice" class="rounded"/>
+
+                  <datalist id="make-list">
+                      <option value="MB">
+                      <option value="BMW">
+                      <option value="AUDI">
+                  </datalist>
+                </div>
+
+                <div class="form-group search_form">
+                  <label for="model-choice" class="search_label">
+                      <span data-feather="truck"></span>
+                      Model</label>
+                  <input list="model-list" id="search-choice" name="model-choice" class="rounded" />
+
+                  <datalist id="model-list">
+                      <option value="GLC">
+                      <option value="X3">
+                      <option value="Q5">
+                  </datalist>              
+                </div>
+
+                <div class="form-group search_form">
+                  <label for="year-form" class="search_label">
+                      <span data-feather="clock"></span>
+                      Year</label>
+                  <input  id="search-choice" name="year-form" class="rounded" />                             
+                </div>
+
+                <div class="form-group search_form">
+                  <label for="mileage-form" class="search_label">
+                      <span data-feather="map"></span>
+                      Mileage</label>
+                  <input  id="search-choice" name="mileage-form" class="rounded" />                             
+                </div>
+
+                <div class="search_form">
+
+                <button type="submit" class="btn btn-primary">Check</button>
+
+                
+                </div>
+
+               
+            </form>
+         
+          </div>
+        </nav>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+          <div id="dashboard" class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom section">
+            <h1 class="h2">Recommanded Selling Price</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+              <div class="btn-group mr-2">
+                <button class="btn btn-sm btn-outline-secondary">Export</button>
+              </div>
+
+            </div>
+          </div>
+
+          <center><h1>$30,000</h1></center>
+
+          
+
+          
+        </main>
+      </div>
+    </div>
+
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+      $("#navigation li a").click(function(e) {
+        e.preventDefault();
+        var targetElement = $(this).attr("href");
+        var targetPosition = $(targetElement).offset().top;
+        $("html, body").animate({ scrollTop: targetPosition - 50 },"slow");
+
+      });
+    
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+    <script>
+      feather.replace()
+    </script>
+
+    <!-- Graphs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+    
+
+    
+  </body>
+</html>
