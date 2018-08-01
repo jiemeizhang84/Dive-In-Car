@@ -2,7 +2,6 @@
 import numpy as np
 import pandas as pd
 import pymongo
-import pprint
 import json
 from bson import json_util
 
