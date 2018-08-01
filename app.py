@@ -2,6 +2,9 @@
 import numpy as np
 import pandas as pd
 import pymongo
+import pprint
+import json
+from bson import json_util
 
 from flask import (
     Flask,
@@ -52,9 +55,14 @@ def years():
 
 @app.route('/car_by_criteria/<price_bin>/<mileage_bin>/<int:year>')
 def car_by_criteria(price_bin,mileage_bin,year):
-    car_by_criteria = list(db.cars.find({"price_bin": price_bin,"mileage_bin":mileage_bin,"year":year}))
+    car_list = []
+    results = db.cars.find({"price_bin": price_bin,"mileage_bin":mileage_bin,"year":year})
+    for result in results:
+        car_result = json.loads(json_util.dumps(result))
+        car_list.append(car_result)
 
-    return jsonify(car_by_criteria)
+
+    return jsonify(car_list)
 
  
 
