@@ -50,8 +50,45 @@ function getOptions() {
 
 function updateSearch() {
     price = document.getElementById('price-selected').value;
+    mileage = document.getElementById('mileage-selected').value;
+    year = document.getElementById('year-selected').value;
 
     console.log(price);
+    console.log(mileage);
+    console.log(year);
+
+    
+
+    Plotly.d3.json(`/car_by_criteria/${price}/${mileage}/${year}`, function(error, results) {
+
+        console.log(results);
+        var tblBody = document.getElementsByTagName("tbody")[0];
+
+        
+        for (var i = 0; i < results.length;  i++) {
+            var result = results[i];
+
+            var row = document.createElement('tr');
+
+            var cell = document.createElement("td");
+            var cellText = document.createTextNode(i);
+            cell.appendChild(cellText);
+            row.appendChild(cell);
+
+            var col_name = ["make","model","trim","type","year","mileage","price"];
+
+            for (var j =0; j < col_name.length; j++) {
+                var cell = document.createElement("td");
+                var cellText = document.createTextNode(result[col_name[j]]);
+                cell.appendChild(cellText);
+                row.appendChild(cell);
+            }
+            tblBody.appendChild(row);
+       
+        }
+
+        // getData(sampleNames[0], buildCharts);
+    })
 
     // return price;
 }

@@ -32,7 +32,7 @@
         <nav class="col-md-2 d-none d-md-block bg-light sidebar">
           <div class="sidebar-sticky">
 
-            <form class="search_form">
+            <div class="search_form">
                 
                 <div class="form-group">
                   <label for="price-choice" class="search_label">
@@ -51,7 +51,7 @@
                   <label for="mileage-choice" class="search_label">
                       <span data-feather="map"></span>
                       Mileage</label>
-                  <input list="mileage-list" id="mileage-choice" name="mileage-choice" class="rounded search-choice" />
+                  <input list="mileage-list" id="mileage-selected" name="mileage-choice" class="rounded search-choice" />
 
                   <datalist id="mileage-list">
                     
@@ -62,15 +62,15 @@
                   <label for="year-choice" class="search_label">
                       <span data-feather="clock"></span>
                       Year</label>
-                  <input list="year-list" id="year-choice" name="year-choice" class="rounded search-choice" />
+                  <input list="year-list" id="year-selected" name="year-choice" class="rounded search-choice" />
 
                   <datalist id="year-list">
                       
                   </datalist>              
                 </div>
 
-                <button type="submit" class="btn btn-primary" onclick="updateSearch()">Search</button>
-            </form>
+                <button class="btn btn-primary" onclick="updateSearch()">Search</button>
+              </div>
          
           </div>
         </nav>
@@ -83,129 +83,28 @@
           </div>
 
           <div class="table-responsive">
-            <table class="table table-striped table-sm table-length">
+            <table id="car_table" class="table table-striped table-sm table-length">
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                  <th>Header</th>
+                  <th>Make</th>
+                  <th>Model</th>
+                  <th>Trim</th>
+                  <th>Type</th>
+                  <th>Year</th>
+                  <th>Mileage</th>
+                  <th>Price($)</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
+                <!-- <tr>
                   <td>1,001</td>
                   <td>Lorem</td>
                   <td>ipsum</td>
                   <td>dolor</td>
                   <td>sit</td>
-                </tr>
-                <tr>
-                  <td>1,002</td>
-                  <td>amet</td>
-                  <td>consectetur</td>
-                  <td>adipiscing</td>
-                  <td>elit</td>
-                </tr>
-                <tr>
-                  <td>1,003</td>
-                  <td>Integer</td>
-                  <td>nec</td>
-                  <td>odio</td>
-                  <td>Praesent</td>
-                </tr>
-                <tr>
-                  <td>1,003</td>
-                  <td>libero</td>
-                  <td>Sed</td>
-                  <td>cursus</td>
-                  <td>ante</td>
-                </tr>
-                <tr>
-                  <td>1,004</td>
-                  <td>dapibus</td>
-                  <td>diam</td>
-                  <td>Sed</td>
-                  <td>nisi</td>
-                </tr>
-                <tr>
-                  <td>1,005</td>
-                  <td>Nulla</td>
-                  <td>quis</td>
-                  <td>sem</td>
-                  <td>at</td>
-                </tr>
-                <tr>
-                  <td>1,006</td>
-                  <td>nibh</td>
-                  <td>elementum</td>
-                  <td>imperdiet</td>
-                  <td>Duis</td>
-                </tr>
-                <tr>
-                  <td>1,007</td>
-                  <td>sagittis</td>
-                  <td>ipsum</td>
-                  <td>Praesent</td>
-                  <td>mauris</td>
-                </tr>
-                <tr>
-                  <td>1,008</td>
-                  <td>Fusce</td>
-                  <td>nec</td>
-                  <td>tellus</td>
-                  <td>sed</td>
-                </tr>
-                <tr>
-                  <td>1,009</td>
-                  <td>augue</td>
-                  <td>semper</td>
-                  <td>porta</td>
-                  <td>Mauris</td>
-                </tr>
-                <tr>
-                  <td>1,010</td>
-                  <td>massa</td>
-                  <td>Vestibulum</td>
-                  <td>lacinia</td>
-                  <td>arcu</td>
-                </tr>
-                <tr>
-                  <td>1,011</td>
-                  <td>eget</td>
-                  <td>nulla</td>
-                  <td>Class</td>
-                  <td>aptent</td>
-                </tr>
-                <tr>
-                  <td>1,012</td>
-                  <td>taciti</td>
-                  <td>sociosqu</td>
-                  <td>ad</td>
-                  <td>litora</td>
-                </tr>
-                <tr>
-                  <td>1,013</td>
-                  <td>torquent</td>
-                  <td>per</td>
-                  <td>conubia</td>
-                  <td>nostra</td>
-                </tr>
-                <tr>
-                  <td>1,014</td>
-                  <td>per</td>
-                  <td>inceptos</td>
-                  <td>himenaeos</td>
-                  <td>Curabitur</td>
-                </tr>
-                <tr>
-                  <td>1,015</td>
-                  <td>sodales</td>
-                  <td>ligula</td>
-                  <td>in</td>
-                  <td>libero</td>
-                </tr>
+                </tr> -->
+                
               </tbody>
             </table>
           </div>
