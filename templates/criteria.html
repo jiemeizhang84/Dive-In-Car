@@ -23,7 +23,7 @@
     <div class="overlay">
 
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-      <a class="navbar-brand" href="index.html">Home</a>
+      <a class="navbar-brand" href="/">Home</a>
       
     </nav>
 
@@ -38,7 +38,7 @@
                   <label for="price-choice" class="search_label">
                       <span data-feather="dollar-sign"></span>
                       Price</label>
-                  <input list="price-list" id="search-choice" name="price-choice" class="rounded"/>
+                  <input list="price-list" id="price-selected" name="price-choice" class="rounded search-choice"/>
 
                   <datalist id="price-list">
                       <!-- <option value="<5k">
@@ -51,7 +51,7 @@
                   <label for="mileage-choice" class="search_label">
                       <span data-feather="map"></span>
                       Mileage</label>
-                  <input list="mileage-list" id="search-choice" name="mileage-choice" class="rounded" />
+                  <input list="mileage-list" id="mileage-choice" name="mileage-choice" class="rounded search-choice" />
 
                   <datalist id="mileage-list">
                     
@@ -62,14 +62,14 @@
                   <label for="year-choice" class="search_label">
                       <span data-feather="clock"></span>
                       Year</label>
-                  <input list="year-list" id="search-choice" name="year-choice" class="rounded" />
+                  <input list="year-list" id="year-choice" name="year-choice" class="rounded search-choice" />
 
                   <datalist id="year-list">
                       
                   </datalist>              
                 </div>
 
-                <button type="submit" class="btn btn-primary">Search</button>
+                <button type="submit" class="btn btn-primary" onclick="updateSearch()">Search</button>
             </form>
          
           </div>
@@ -79,9 +79,6 @@
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2">Car Chosen</h1>
             <div class="btn-toolbar mb-2 mb-md-0">
-              <div class="btn-group mr-2">
-                <button class="btn btn-sm btn-outline-secondary">Export</button>
-              </div>
             </div>
           </div>
 

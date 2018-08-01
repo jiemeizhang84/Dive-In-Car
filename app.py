@@ -34,9 +34,21 @@ db = client.car_db
 #################################################
 
 @app.route("/")
-def home():
-    
+def home():   
+    return render_template("index.html")
+
+@app.route("/criteria")
+def criteria():  
     return render_template("criteria.html")
+
+@app.route("/comparison")
+def comparison():  
+    return render_template("comparison.html")
+
+@app.route("/sellingPrice")
+def sellingPrice():  
+    return render_template("sellingPrice.html")
+
 
 @app.route('/price_bin')
 def price_bin():
@@ -60,7 +72,6 @@ def car_by_criteria(price_bin,mileage_bin,year):
     for result in results:
         car_result = json.loads(json_util.dumps(result))
         car_list.append(car_result)
-
 
     return jsonify(car_list)
 

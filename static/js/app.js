@@ -6,7 +6,7 @@ function getOptions() {
     // Use the list of sample names to populate the select options
     Plotly.d3.json('/price_bin', function(error, price_bin) {
 
-        print(price_bin)
+        
         for (var i = 0; i < price_bin.length;  i++) {
             var currentOption = document.createElement('option');
             currentOption.text = price_bin[i];
@@ -21,7 +21,7 @@ function getOptions() {
 
     Plotly.d3.json('/mileage_bin', function(error, mileage_bin) {
 
-        print(mileage_bin)
+        
         for (var i = 0; i < mileage_bin.length;  i++) {
             var currentOption = document.createElement('option');
             currentOption.text = mileage_bin[i];
@@ -36,7 +36,7 @@ function getOptions() {
 
     Plotly.d3.json('/years', function(error, years) {
 
-        print(years)
+        
         for (var i = 0; i < years.length;  i++) {
             var currentOption = document.createElement('option');
             currentOption.text = years[i];
@@ -46,6 +46,14 @@ function getOptions() {
 
         // getData(sampleNames[0], buildCharts);
     })
+}
+
+function updateSearch() {
+    price = document.getElementById('price-selected').value;
+
+    console.log(price);
+
+    // return price;
 }
 
 function init() {
