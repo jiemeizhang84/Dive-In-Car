@@ -8,13 +8,14 @@
     <!-- <link rel="icon" href="../../../../favicon.ico"> -->
 
     <title>Criteria</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
     <!-- Custom styles for this template -->
-    <link href="dashboard.css" rel="stylesheet">
     
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
   </head>
 
   <body>
@@ -40,9 +41,9 @@
                   <input list="price-list" id="search-choice" name="price-choice" class="rounded"/>
 
                   <datalist id="price-list">
-                      <option value="<5k">
+                      <!-- <option value="<5k">
                       <option value="5k-10k">
-                      <option value="10k-15k">
+                      <option value="10k-15k"> -->
                   </datalist>
                 </div>
 
@@ -53,9 +54,7 @@
                   <input list="mileage-list" id="search-choice" name="mileage-choice" class="rounded" />
 
                   <datalist id="mileage-list">
-                      <option value="<5k">
-                      <option value="5k-10k">
-                      <option value="10k-15k">
+                    
                   </datalist>              
                 </div>
 
@@ -66,9 +65,7 @@
                   <input list="year-list" id="search-choice" name="year-choice" class="rounded" />
 
                   <datalist id="year-list">
-                      <option value="2016">
-                      <option value="2017">
-                      <option value="2018">
+                      
                   </datalist>              
                 </div>
 
@@ -236,6 +233,7 @@
 
     <!-- Graphs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
     
   </body>
 </html>
