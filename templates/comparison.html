@@ -8,6 +8,7 @@
     <!-- <link rel="icon" href="../../../../favicon.ico"> -->
 
     <title>Comparison</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -31,18 +32,15 @@
         <nav class="col-md-2 d-none d-md-block bg-light sidebar">
           <div class="sidebar-sticky">
 
-            <form>
+            <div>
                 
                 <div class="form-group search_form">
                   <label for="make-choice" class="search_label">
                       <span data-feather="bold"></span>
                       Make</label>
-                  <input list="make-list" id="make-choice" name="make-choice" class="rounded search-choice"/>
+                  <input list="make-list-comparison" id="make-selected" name="make-choice" class="rounded search-choice" onchange = "updateModel()"/>
 
-                  <datalist id="make-list">
-                      <option value="MB">
-                      <option value="BMW">
-                      <option value="AUDI">
+                  <datalist id="make-list-comparison">
                   </datalist>
                 </div>
 
@@ -50,18 +48,26 @@
                   <label for="model-choice" class="search_label">
                       <span data-feather="truck"></span>
                       Model</label>
-                  <input list="model-list" id="model-choice" name="model-choice" class="rounded search-choice" />
+                  <input list="model-list-comparison" id="model-selected" name="model-choice" class="rounded search-choice" />
 
-                  <datalist id="model-list">
-                      <option value="GLC">
-                      <option value="X3">
-                      <option value="Q5">
+                  <datalist id="model-list-comparison">
+                  </datalist>              
+                </div>
+
+                <div class="form-group search_form">
+                  <label for="year-choice" class="search_label">
+                      <span data-feather="clock"></span>
+                      Year</label>
+                  <input list="year-list" id="year-selected-comparison" name="year-choice" class="rounded search-choice" />
+
+                  <datalist id="year-list">
+                      
                   </datalist>              
                 </div>
 
                 <div class="search_form">
 
-                <button type="submit" class="btn btn-primary">Add</button>
+                <button class="btn btn-primary" onclick="addCar()">Add</button>
 
                 <hr search_form>
                 </div>
@@ -104,7 +110,7 @@
                     </a>
                   </li>
                 </ul>
-            </form>
+            </div>
          
           </div>
         </nav>
@@ -135,125 +141,17 @@
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>Header</th>
-                    <th>Header</th>
-                    <th>Header</th>
-                    <th>Header</th>
+                    <th>Make</th>
+                    <th>Model</th>
+                    <th>Trim</th>
+                    <th>Type</th>
+                    <th>Year</th>
+                    <th>Mileage</th>
+                    <th>Price($)</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>1,001</td>
-                    <td>Lorem</td>
-                    <td>ipsum</td>
-                    <td>dolor</td>
-                    <td>sit</td>
-                  </tr>
-                  <tr>
-                    <td>1,002</td>
-                    <td>amet</td>
-                    <td>consectetur</td>
-                    <td>adipiscing</td>
-                    <td>elit</td>
-                  </tr>
-                  <tr>
-                    <td>1,003</td>
-                    <td>Integer</td>
-                    <td>nec</td>
-                    <td>odio</td>
-                    <td>Praesent</td>
-                  </tr>
-                  <tr>
-                    <td>1,003</td>
-                    <td>libero</td>
-                    <td>Sed</td>
-                    <td>cursus</td>
-                    <td>ante</td>
-                  </tr>
-                  <tr>
-                    <td>1,004</td>
-                    <td>dapibus</td>
-                    <td>diam</td>
-                    <td>Sed</td>
-                    <td>nisi</td>
-                  </tr>
-                  <tr>
-                    <td>1,005</td>
-                    <td>Nulla</td>
-                    <td>quis</td>
-                    <td>sem</td>
-                    <td>at</td>
-                  </tr>
-                  <tr>
-                    <td>1,006</td>
-                    <td>nibh</td>
-                    <td>elementum</td>
-                    <td>imperdiet</td>
-                    <td>Duis</td>
-                  </tr>
-                  <tr>
-                    <td>1,007</td>
-                    <td>sagittis</td>
-                    <td>ipsum</td>
-                    <td>Praesent</td>
-                    <td>mauris</td>
-                  </tr>
-                  <tr>
-                    <td>1,008</td>
-                    <td>Fusce</td>
-                    <td>nec</td>
-                    <td>tellus</td>
-                    <td>sed</td>
-                  </tr>
-                  <tr>
-                    <td>1,009</td>
-                    <td>augue</td>
-                    <td>semper</td>
-                    <td>porta</td>
-                    <td>Mauris</td>
-                  </tr>
-                  <tr>
-                    <td>1,010</td>
-                    <td>massa</td>
-                    <td>Vestibulum</td>
-                    <td>lacinia</td>
-                    <td>arcu</td>
-                  </tr>
-                  <tr>
-                    <td>1,011</td>
-                    <td>eget</td>
-                    <td>nulla</td>
-                    <td>Class</td>
-                    <td>aptent</td>
-                  </tr>
-                  <tr>
-                    <td>1,012</td>
-                    <td>taciti</td>
-                    <td>sociosqu</td>
-                    <td>ad</td>
-                    <td>litora</td>
-                  </tr>
-                  <tr>
-                    <td>1,013</td>
-                    <td>torquent</td>
-                    <td>per</td>
-                    <td>conubia</td>
-                    <td>nostra</td>
-                  </tr>
-                  <tr>
-                    <td>1,014</td>
-                    <td>per</td>
-                    <td>inceptos</td>
-                    <td>himenaeos</td>
-                    <td>Curabitur</td>
-                  </tr>
-                  <tr>
-                    <td>1,015</td>
-                    <td>sodales</td>
-                    <td>ligula</td>
-                    <td>in</td>
-                    <td>libero</td>
-                  </tr>
+                  
                 </tbody>
               </table>
             </div>
@@ -348,6 +246,7 @@
       });
 
     </script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 
     
   </body>
