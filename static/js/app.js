@@ -5,7 +5,7 @@ function getOptions() {
 
     var selector_make = document.getElementById('make-list-comparison');
 
-    // Use the list of sample names to populate the select options
+
     Plotly.d3.json('/makeComparison', function(error, make) {
 
         console.log(make);
@@ -18,7 +18,6 @@ function getOptions() {
             selector_make.appendChild(currentOption);
         }
 
-        // getData(sampleNames[0], buildCharts);
     })
 
     var selector_year_comparison = document.getElementById('year-list-comparison');
@@ -33,16 +32,11 @@ function getOptions() {
             selector_year_comparison.appendChild(currentOption);
         }
 
-        // getData(sampleNames[0], buildCharts);
     })
 
-    
-
-
-    // Grab a reference to the dropdown select element
     var selector_price = document.getElementById('price-list');
 
-    // Use the list of sample names to populate the select options
+
     Plotly.d3.json('/price_bin', function(error, price_bin) {
         
 
@@ -54,7 +48,6 @@ function getOptions() {
             selector_price.appendChild(currentOption);
         }
 
-        // getData(sampleNames[0], buildCharts);
     })
 
     var selector_mileage = document.getElementById('mileage-list');
@@ -69,7 +62,6 @@ function getOptions() {
             selector_mileage.appendChild(currentOption);
         }
 
-        // getData(sampleNames[0], buildCharts);
     })
 
     var selector_year = document.getElementById('year-list');
@@ -84,7 +76,6 @@ function getOptions() {
             selector_year.appendChild(currentOption);
         }
 
-        // getData(sampleNames[0], buildCharts);
     })
 }
 
@@ -107,8 +98,6 @@ function updateModel() {
             currentOption.value = model[i]
             selector_model.appendChild(currentOption);
         }
-
-        // getData(sampleNames[0], buildCharts);
     })
 }
 
@@ -157,25 +146,22 @@ function addCar() {
         if (counter==1) {
             scatterPlot(results[0]);
             linePlot(results[0]);
+            barPlot(results[0]);
         } else {
             updateScatterPlot(results[0]);
             updateLinePlot(results[0]);
-        }
+        };
+
+        
 
         document.getElementById('make-selected').value = '';
         document.getElementById('model-selected').value = '';
         document.getElementById('year-selected-comparison').value = '';
-        document.getElementById('make-list-comparison').reset();
+ 
+    });
 
-        
 
-        
-    })
-
-    
-
-    // return price;
-}
+};
 
 
 function updateSearch() {
@@ -194,40 +180,44 @@ function updateSearch() {
         console.log(results);
         var tblBody = document.getElementsByTagName("tbody")[0];
 
+        var col_name = ["make","model","trim","type","year","mileage","price"];
+
         
         tblBody.innerHTML = '';
 
-        
-        for (var i = 0; i < results.length;  i++) {
-            var result = results[i];
-
-            var row = document.createElement('tr');
-
-            var cell = document.createElement("td");
-            var cellText = document.createTextNode(i);
-            cell.appendChild(cellText);
-            row.appendChild(cell);
-
-            var col_name = ["make","model","trim","type","year","mileage","price"];
-
-            for (var j =0; j < col_name.length; j++) {
+        if (results.length == 0) {
+            for (var j =0; j < col_name.length+1; j++) {
+                var row = document.createElement('tr');
                 var cell = document.createElement("td");
-                var cellText = document.createTextNode(result[col_name[j]]);
+                var cellText = document.createTextNode('no result');
                 cell.appendChild(cellText);
                 row.appendChild(cell);
             }
             tblBody.appendChild(row);
-       
+        } else {
+            for (var i = 0; i < results.length;  i++) {
+                var result = results[i];
+    
+                var row = document.createElement('tr');
+    
+                var cell = document.createElement("td");
+                var cellText = document.createTextNode(i+1);
+                cell.appendChild(cellText);
+                row.appendChild(cell);
+    
+                for (var j =0; j < col_name.length; j++) {
+                    var cell = document.createElement("td");
+                    var cellText = document.createTextNode(result[col_name[j]]);
+                    cell.appendChild(cellText);
+                    row.appendChild(cell);
+                }
+                tblBody.appendChild(row);       
+            }
+
         }
 
-        
-
-
-
-        // getData(sampleNames[0], buildCharts);
     })
 
-    // return price;
 };
 
 function scatterPlot(carData) {
@@ -332,6 +322,82 @@ function updateLinePlot(carData) {
         y: priceList,
         name: carData['year'] + ' ' + carData['brand'] + ' ' +  carData['model']
     });
+};
+
+
+function barPlot(carData) {
+    var trace1 = {
+        x: [1,2,3,4,5],
+        y: carData['depreciation'].slice(0,5),       
+        type: 'bar',
+        name: 'depreciation'
+    }; 
+
+    var trace2 = {
+        x: [1,2,3,4,5],
+        y: carData['taxes'].slice(0,5),       
+        type: 'bar',
+        name: 'taxes'
+    }; 
+
+    var trace3 = {
+        x: [1,2,3,4,5],
+        y: carData['financing'].slice(0,5),       
+        type: 'bar',
+        name: 'financing'
+    }; 
+
+    var trace4 = {
+        x: [1,2,3,4,5],
+        y: carData['fuel'].slice(0,5),       
+        type: 'bar',
+        name: 'fuel'
+    }; 
+
+    var trace5 = {
+        x: [1,2,3,4,5],
+        y: carData['insurance'].slice(0,5),       
+        type: 'bar',
+        name: 'insurance'
+    }; 
+
+    var trace6 = {
+        x: [1,2,3,4,5],
+        y: carData['maintenance'].slice(0,5),       
+        type: 'bar',
+        name: 'maintenance'
+    }; 
+
+    var trace7 = {
+        x: [1,2,3,4,5],
+        y: carData['repairs'].slice(0,5),       
+        type: 'bar',
+        name: 'repairs'
+    }; 
+    
+    var data = [trace1, trace2, trace3, trace4, trace5, trace6, trace7];
+    var layout = {
+        barmode: 'stack',
+        title: carData['year'] + ' ' + carData['brand'] + ' ' +  carData['model'],
+        xaxis: {
+          title: 'In Years',
+          titlefont: {
+            family: 'Courier New, monospace',
+            size: 18,
+            color: '#7f7f7f'
+          }
+        },
+        yaxis: {
+          title: 'True Cost to Own ($)',
+          titlefont: {
+            family: 'Courier New, monospace',
+            size: 18,
+            color: '#7f7f7f'
+          }
+        }
+      };
+    var barChart = document.getElementById('barChart');
+    Plotly.plot(barChart, data, layout);
 };
 
 function init() {

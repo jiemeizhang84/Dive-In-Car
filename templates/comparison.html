@@ -74,40 +74,27 @@
 
                 <ul id="navigation" class="nav flex-column">
                   <li class="nav-item">
-                    <a class="nav-link" href="#mileage">
-                      <span data-feather="file"></span>
+                    <a class="nav-link" href="#price_depreciation">
+                      <span data-feather="dollar-sign"></span>
                       Price Depreciation
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#dashboard">
-                      <span data-feather="home"></span>
+                    <a class="nav-link" href="#cash_price_vs_tco">
+                      <span data-feather="dollar-sign"></span>
                       Cash Price vs True Cost to Own
-                       <!-- <span class="sr-only">(current)</span> -->
                     </a>
                   </li>
-                  
+
                   <li class="nav-item">
-                    <a class="nav-link" href="#">
-                      <span data-feather="shopping-cart"></span>
-                      Price vs Model (brain bar)
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">
-                      <span data-feather="users"></span>
-                      Price vs Year (box)
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">
-                      <span data-feather="bar-chart-2"></span>
-                      TCO (stacked bar)
+                    <a class="nav-link" href="#tco">
+                      <span data-feather="dollar-sign"></span>
+                      True Cost to Own Breakdown
                     </a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="#car_table">
-                      <span data-feather="layers"></span>
+                      <span data-feather="truck"></span>
                       Car Chosen
                     </a>
                   </li>
@@ -119,7 +106,7 @@
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
           
-          <div id="mileage" class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom section">
+          <div id="price_depreciation" class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom section">
             <h1 class="h2">Price Depreciation</h1>
             <div class="btn-toolbar mb-2 mb-md-0">
 
@@ -129,16 +116,24 @@
           <div class="my-4 w-100" id="lineChart" width="900" height="380"></div>
 
 
-          <div id="dashboard" class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom section">
+          <div id="cash_price_vs_tco" class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom section">
             <h1 class="h2">Cash Price vs True Cost to Own</h1>
             <div class="btn-toolbar mb-2 mb-md-0">
 
             </div>
           </div>
 
-          <!-- <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas> -->
           <div class="my-4 w-100" id="scatter" width="900" height="380"></div>
   
+          <div id="tco" class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom section">
+            <h1 class="h2">True Cost to Own Breakdown</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+
+            </div>
+          </div>
+
+          <div class="my-4 w-100" id="barChart" width="900" height="380"></div>
+    
 
           <div id="car_table" class="section">
             <h2>Car Chosen</h2>
