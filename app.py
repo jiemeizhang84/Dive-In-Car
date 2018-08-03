@@ -27,6 +27,7 @@ client = pymongo.MongoClient(conn)
 
 # Connect to a database. Will create one if not already available.
 db = client.car_db
+comparison_db = client.LuxSUVDB
 
 #################################################
 # Flask Routes
@@ -74,15 +75,16 @@ def car_by_criteria(price_bin,mileage_bin,year):
 
     return jsonify(car_list)
 
-@app.route('/car_by_comparison/<make>/<model>/<int:year>')
-def car_by_comparison(make,model,year):
-    car_list = []
-    results = db.cars.find({"make": make,"model":model,"year":year})
-    for result in results:
-        car_result = json.loads(json_util.dumps(result))
-        car_list.append(car_result)
+# @app.route('/car_by_comparison/<make>/<model>/<int:year>')
+# def car_by_comparison(make,model,year):
+#     car_list = []
+#     results = db.cars.find({"make": make,"model":model,"year":year})
+#     for result in results:
+#         car_result = json.loads(json_util.dumps(result))
+#         car_list.append(car_result)
 
-    return jsonify(car_list)
+#     return jsonify(car_list)
+
  
 @app.route('/make')
 def make():
@@ -94,6 +96,43 @@ def model(make):
     model = db.cars.find({"make": make}).distinct("model")
     return jsonify(model)
 
+
+@app.route('/makeComparison')
+def makeComparison():
+    make = comparison_db["2014"].distinct("brand")
+    return jsonify(make)   
+
+@app.route('/<make>/modelComparison')
+def modelComparison(make):
+    model = comparison_db["2014"].find({"brand": make}).distinct("model")
+    return jsonify(model)
+
+@app.route('/yearComparison')
+def yearComparison():
+    year = ["2014","2015","2016","2017","2018"]
+    return jsonify(year)
+
+@app.route('/car_by_comparison/<make>/<model>/<year>')
+def car_by_comparison(make,model,year):
+    car_list = []
+    results = comparison_db[year].find({"brand": make,"model":model,"year":year})
+    
+    for result in results:
+        car_result = json.loads(json_util.dumps(result))
+        car_list.append(car_result)
+
+    return jsonify(car_list)
+
+# @app.route('/car_by_comparison')
+# def car_by_comparison():
+#     car_list = []
+#     results = comparison_db["2014"].find({"brand": "audi","model":"q5","year":"2014"})
+    
+#     for result in results:
+#         car_result = json.loads(json_util.dumps(result))
+#         car_list.append(car_result)
+
+#     return jsonify(car_list)
 
 
 if __name__ == "__main__":

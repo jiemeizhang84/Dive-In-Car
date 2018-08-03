@@ -1,10 +1,12 @@
+var counter = 0;
+
 function getOptions() {
 
 
     var selector_make = document.getElementById('make-list-comparison');
 
     // Use the list of sample names to populate the select options
-    Plotly.d3.json('/make', function(error, make) {
+    Plotly.d3.json('/makeComparison', function(error, make) {
 
         console.log(make);
 
@@ -14,6 +16,21 @@ function getOptions() {
             currentOption.text = make[i];
             currentOption.value = make[i]
             selector_make.appendChild(currentOption);
+        }
+
+        // getData(sampleNames[0], buildCharts);
+    })
+
+    var selector_year_comparison = document.getElementById('year-list-comparison');
+
+    Plotly.d3.json('/yearComparison', function(error, years) {
+
+        
+        for (var i = 0; i < years.length;  i++) {
+            var currentOption = document.createElement('option');
+            currentOption.text = years[i];
+            currentOption.value = years[i]
+            selector_year_comparison.appendChild(currentOption);
         }
 
         // getData(sampleNames[0], buildCharts);
@@ -79,7 +96,7 @@ function updateModel() {
     selector_model.innerHTML = '';
 
     // Use the list of sample names to populate the select options
-    Plotly.d3.json(`/${make}/model`, function(error, model) {
+    Plotly.d3.json(`/${make}/modelComparison`, function(error, model) {
 
         console.log(model);
         
@@ -95,6 +112,8 @@ function updateModel() {
 }
 
 function addCar() {
+
+    counter = counter + 1;
     make = document.getElementById('make-selected').value;
     model = document.getElementById('model-selected').value;
     year = document.getElementById('year-selected-comparison').value;
@@ -121,7 +140,7 @@ function addCar() {
             cell.appendChild(cellText);
             row.appendChild(cell);
 
-            var col_name = ["make","model","trim","type","year","mileage","price"];
+            var col_name = ["brand","model","year","cash_price","owning_cost"];
 
             for (var j =0; j < col_name.length; j++) {
                 var cell = document.createElement("td");
@@ -132,9 +151,20 @@ function addCar() {
             tblBody.appendChild(row);
        
         }
+        console.log(results[0]);
 
-        // getData(sampleNames[0], buildCharts);
+        if (counter==1) {
+            scatterPlot(results[0]);
+        } else {
+            updateScatterPlot(results[0]);
+        }
+
+        
+
+        
     })
+
+    
 
     // return price;
 }
@@ -155,6 +185,9 @@ function updateSearch() {
 
         console.log(results);
         var tblBody = document.getElementsByTagName("tbody")[0];
+
+        
+        tblBody.innerHTML = '';
 
         
         for (var i = 0; i < results.length;  i++) {
@@ -179,15 +212,53 @@ function updateSearch() {
        
         }
 
+        
+
+
+
         // getData(sampleNames[0], buildCharts);
     })
 
     // return price;
+};
+
+function scatterPlot(carData) {
+    console.log(carData['cash_price']);
+    var trace1 = {
+        x: [parseInt(carData['cash_price'])],
+        y: [parseInt(carData['owning_cost'])],       
+        mode: 'markers',
+        type: 'scatter'
+    }; 
+    
+    var data = [trace1];
+    var scatter = document.getElementById('myChart');
+    Plotly.plot(scatter, data);
+};
+
+function updateScatterPlot(carData) {
+    var scatter = document.getElementById('myChart');
+    Plotly.addTraces(scatter, {
+        x: [parseInt(carData['cash_price'])],
+        y: [parseInt(carData['owning_cost'])]});
 }
 
 function init() {
     getOptions();
-}
+};
 
 // Initialize the dashboard
 init();
+
+
+
+
+
+// chart moves to top when clicking the side bar nav
+$("#navigation li a").click(function(e) {
+    e.preventDefault();
+    var targetElement = $(this).attr("href");
+    var targetPosition = $(targetElement).offset().top;
+    $("html, body").animate({ scrollTop: targetPosition - 50 },"slow");
+
+});
