@@ -89,6 +89,7 @@ function getOptions() {
 }
 
 function updateModel() {
+
     make = document.getElementById('make-selected').value;
     console.log(make);
 
@@ -136,7 +137,7 @@ function addCar() {
             var row = document.createElement('tr');
 
             var cell = document.createElement("td");
-            var cellText = document.createTextNode(i);
+            var cellText = document.createTextNode(counter);
             cell.appendChild(cellText);
             row.appendChild(cell);
 
@@ -155,9 +156,16 @@ function addCar() {
 
         if (counter==1) {
             scatterPlot(results[0]);
+            linePlot(results[0]);
         } else {
             updateScatterPlot(results[0]);
+            updateLinePlot(results[0]);
         }
+
+        document.getElementById('make-selected').value = '';
+        document.getElementById('model-selected').value = '';
+        document.getElementById('year-selected-comparison').value = '';
+        document.getElementById('make-list-comparison').reset();
 
         
 
@@ -228,20 +236,103 @@ function scatterPlot(carData) {
         x: [parseInt(carData['cash_price'])],
         y: [parseInt(carData['owning_cost'])],       
         mode: 'markers',
-        type: 'scatter'
+        type: 'scatter',
+        name: carData['year'] + ' ' + carData['brand'] + ' ' + carData['model']
     }; 
     
     var data = [trace1];
-    var scatter = document.getElementById('myChart');
-    Plotly.plot(scatter, data);
+    var layout = {
+        
+        xaxis: {
+          title: 'Cash Price',
+          titlefont: {
+            family: 'Courier New, monospace',
+            size: 18,
+            color: '#7f7f7f'
+          }
+        },
+        yaxis: {
+          title: 'True Cost to Own in 5 years',
+          titlefont: {
+            family: 'Courier New, monospace',
+            size: 18,
+            color: '#7f7f7f'
+          }
+        }
+      };
+    var scatter = document.getElementById('scatter');
+    Plotly.plot(scatter, data, layout);
 };
 
 function updateScatterPlot(carData) {
-    var scatter = document.getElementById('myChart');
+    var scatter = document.getElementById('scatter');
     Plotly.addTraces(scatter, {
         x: [parseInt(carData['cash_price'])],
-        y: [parseInt(carData['owning_cost'])]});
-}
+        y: [parseInt(carData['owning_cost'])],
+        name: carData['year'] + ' ' + carData['brand'] + ' ' +  carData['model']
+    });
+};
+
+function linePlot(carData) {
+
+    var priceList = [];
+    var currentPrice = carData['cash_price'];
+    priceList.push(currentPrice);
+    for (i=0;i<(carData['depreciation'].length-1);i++) {
+        currentPrice = currentPrice - carData['depreciation'][i];
+        priceList.push(currentPrice);
+
+    }
+    
+    var trace1 = {
+        x: [0,1,2,3,4,5],
+        y: priceList,
+        mode: 'lines',
+        line: {
+            width: 3
+        },
+        name: carData['year'] + ' ' + carData['brand'] + ' ' + carData['model']
+    }; 
+    
+    var data = [trace1];
+    var layout = {
+        
+        xaxis: {
+          title: 'In Years',
+          titlefont: {
+            family: 'Courier New, monospace',
+            size: 18,
+            color: '#7f7f7f'
+          }
+        },
+        yaxis: {
+          title: 'Car Price after Depreciation ($)',
+          titlefont: {
+            family: 'Courier New, monospace',
+            size: 18,
+            color: '#7f7f7f'
+          }
+        }
+      };
+    var lineChart = document.getElementById('lineChart');
+    Plotly.plot(lineChart, data, layout);
+};
+
+function updateLinePlot(carData) {
+    var lineChart = document.getElementById('lineChart');
+    var priceList = [];
+    var currentPrice = carData['cash_price'];
+    priceList.push(currentPrice);
+    for (i=0;i<(carData['depreciation'].length-1);i++) {
+        currentPrice = currentPrice - carData['depreciation'][i];
+        priceList.push(currentPrice);
+
+    }
+    Plotly.addTraces(lineChart, {
+        y: priceList,
+        name: carData['year'] + ' ' + carData['brand'] + ' ' +  carData['model']
+    });
+};
 
 function init() {
     getOptions();
@@ -249,6 +340,9 @@ function init() {
 
 // Initialize the dashboard
 init();
+
+var x = document.cookie;
+console.log(x);
 
 
 
