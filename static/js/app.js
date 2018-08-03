@@ -273,6 +273,10 @@ function linePlot(carData) {
         priceList.push(currentPrice);
 
     }
+
+    var textList = ['0'];
+    carData['depreciation'].map(price=>textList.push((-price/carData['cash_price']*100).toFixed(2).toString()+"%"))
+    
     
     var trace1 = {
         x: [0,1,2,3,4,5],
@@ -281,6 +285,8 @@ function linePlot(carData) {
         line: {
             width: 3
         },
+        text: textList,
+        textposition: 'bottom',
         name: carData['year'] + ' ' + carData['brand'] + ' ' + carData['model']
     }; 
     
@@ -318,8 +324,12 @@ function updateLinePlot(carData) {
         priceList.push(currentPrice);
 
     }
+    var textList = ['0'];
+    carData['depreciation'].map(price=>textList.push((-price/carData['cash_price']*100).toFixed(2).toString()+"%"))
     Plotly.addTraces(lineChart, {
         y: priceList,
+        text: textList,
+        textposition: 'bottom',
         name: carData['year'] + ' ' + carData['brand'] + ' ' +  carData['model']
     });
 };
