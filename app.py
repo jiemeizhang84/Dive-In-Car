@@ -27,7 +27,7 @@ client = pymongo.MongoClient(conn)
 
 # Connect to a database. Will create one if not already available.
 db = client.car_db
-comparison_db = client.LuxSUVDB
+# db = client.LuxSUVDB
 
 #################################################
 # Flask Routes
@@ -99,23 +99,23 @@ def model(make):
 
 @app.route('/makeComparison')
 def makeComparison():
-    make = comparison_db["2014"].distinct("brand")
+    make = db["2017"].distinct("brand")
     return jsonify(make)   
 
 @app.route('/<make>/modelComparison')
 def modelComparison(make):
-    model = comparison_db["2014"].find({"brand": make}).distinct("model")
+    model = db["2017"].find({"brand": make}).distinct("model")
     return jsonify(model)
 
 @app.route('/yearComparison')
 def yearComparison():
-    year = ["2014","2015","2016","2017","2018"]
+    year = ["2015","2016","2017"]
     return jsonify(year)
 
 @app.route('/car_by_comparison/<make>/<model>/<year>')
 def car_by_comparison(make,model,year):
     car_list = []
-    results = comparison_db[year].find({"brand": make,"model":model,"year":year})
+    results = db[year].find({"brand": make,"model":model,"year":year})
     
     for result in results:
         car_result = json.loads(json_util.dumps(result))
@@ -126,7 +126,7 @@ def car_by_comparison(make,model,year):
 # @app.route('/car_by_comparison')
 # def car_by_comparison():
 #     car_list = []
-#     results = comparison_db["2014"].find({"brand": "audi","model":"q5","year":"2014"})
+#     results = db["2014"].find({"brand": "audi","model":"q5","year":"2014"})
     
 #     for result in results:
 #         car_result = json.loads(json_util.dumps(result))
