@@ -252,6 +252,23 @@ function scatterPlot(carData) {
       };
     var scatter = document.getElementById('scatter');
     Plotly.plot(scatter, data, layout);
+
+    scatter.on('plotly_click', function(scatterData) {
+        console.log(scatterData);
+        
+        var trace = scatterData.points[0].data;
+        var pointName = trace.name.split(' ');
+        var year = pointName[0];
+        var make = pointName[1];
+        var model = pointName[2];
+        console.log(pointName);
+
+        
+        updateBarPlot(year,make,model);
+        
+
+
+    });
 };
 
 function updateScatterPlot(carData) {
@@ -275,7 +292,14 @@ function linePlot(carData) {
     }
 
     var textList = ['0'];
-    carData['depreciation'].map(price=>textList.push((-price/carData['cash_price']*100).toFixed(2).toString()+"%"))
+    var depreciationPrice = 0;
+    for (i=0;i<(carData['depreciation'].length-1);i++) {
+        depreciationPrice += parseInt(carData['depreciation'][i]);
+        textList.push((-depreciationPrice/carData['cash_price']*100).toFixed(2).toString()+"%");
+
+    }
+
+    // carData['depreciation'].map(price=>textList.push((-price/carData['cash_price']*100).toFixed(2).toString()+"%"))
     
     
     var trace1 = {
@@ -325,7 +349,13 @@ function updateLinePlot(carData) {
 
     }
     var textList = ['0'];
-    carData['depreciation'].map(price=>textList.push((-price/carData['cash_price']*100).toFixed(2).toString()+"%"))
+    var depreciationPrice = 0;
+    for (i=0;i<(carData['depreciation'].length-1);i++) {
+        depreciationPrice += parseInt(carData['depreciation'][i]);
+        console.log(depreciationPrice);
+        textList.push((-depreciationPrice/carData['cash_price']*100).toFixed(2).toString()+"%");
+
+    }
     Plotly.addTraces(lineChart, {
         y: priceList,
         text: textList,
@@ -407,8 +437,24 @@ function barPlot(carData) {
         }
       };
     var barChart = document.getElementById('barChart');
-    Plotly.plot(barChart, data, layout);
+    Plotly.newPlot(barChart, data, layout);
 };
+
+function updateBarPlot(year,make,model) {
+    Plotly.d3.json(`/car_by_comparison/${make}/${model}/${year}`, function(error, results) {
+
+        console.log(results[0]);
+        var carData = results[0];
+            
+        var targetPosition = $("#tco").offset().top;
+        $("html, body").animate({ scrollTop: targetPosition - 50 },"slow");
+      
+        barPlot(carData);
+
+    });
+
+};
+
 
 function init() {
     getOptions();

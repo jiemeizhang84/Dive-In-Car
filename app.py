@@ -75,6 +75,35 @@ def car_by_criteria(price_bin,mileage_bin,year):
 
     return jsonify(car_list)
 
+@app.route('/car_by_criteria_tree/<price_bin>/<mileage_bin>/<int:year>')
+def car_by_criteria_tree(price_bin,mileage_bin,year):
+    car_list = {
+        "name": "car",
+        "children": []
+    }
+    results = db.cars.find({"price_bin": price_bin,"mileage_bin":mileage_bin,"year":year})
+    for result in results:
+        trim = [
+            {
+                "name": result["trim"],
+                "price": result["price"]
+            }
+        ]
+        model = [
+            {
+                "name": result["model"],
+                "children": trim
+            }
+        ]
+        make = {
+                "name": result["make"],
+                "children": model
+               }
+        car_list["children"].append(make)
+
+
+    return jsonify(car_list)
+
 # @app.route('/car_by_comparison/<make>/<model>/<int:year>')
 # def car_by_comparison(make,model,year):
 #     car_list = []
