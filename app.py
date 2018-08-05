@@ -127,6 +127,7 @@ def car_by_criteria_tree(price_bin,mileage_bin,year):
                     "name": trim,
                     "price": result["price"]
             }
+            car_children = car_list["children"]
             for car_child in car_children:
                 if car_child["name"] == make:
                     make_children = car_child["children"]
