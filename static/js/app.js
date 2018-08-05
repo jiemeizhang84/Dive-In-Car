@@ -173,6 +173,7 @@ function updateSearch() {
     console.log(mileage);
     console.log(year);
 
+    d3.select("#treeChart").selectAll("*").remove();
     treePlot(price, mileage, year);
 
     Plotly.d3.json(`/car_by_criteria/${price}/${mileage}/${year}`, function(error, results) {
