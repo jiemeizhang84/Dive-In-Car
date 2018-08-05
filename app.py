@@ -81,25 +81,69 @@ def car_by_criteria_tree(price_bin,mileage_bin,year):
         "name": "car",
         "children": []
     }
+    make_list = []
+    model_list = []
+    trim_list = []
     results = db.cars.find({"price_bin": price_bin,"mileage_bin":mileage_bin,"year":year})
     for result in results:
-        trim = [
-            {
-                "name": result["trim"],
+        make = result["make"]
+        model = result["model"]
+        trim = result["trim"]
+        if (make not in make_list and model not in model_list and trim not in trim_list):
+            make_list.append(make)
+            model_list.append(model)
+            trim_list.append(trim)
+            trimData = {
+                "name": trim,
                 "price": result["price"]
+            }            
+            modelData = {
+                "name": model,
+                "children": [trimData]
+            }            
+            makeData = {
+                "name": make,
+                "children": [modelData]
             }
-        ]
-        model = [
-            {
-                "name": result["model"],
-                "children": trim
+            car_list["children"].append(makeData)                
+        elif (make in make_list and model not in model_list and trim not in trim_list):
+            model_list.append(model)
+            trim_list.append(trim)
+            trimData ={
+                    "name": trim,
+                    "price": result["price"]
             }
-        ]
-        make = {
-                "name": result["make"],
-                "children": model
-               }
-        car_list["children"].append(make)
+            modelData = {
+                    "name": model,
+                    "children": [trimData]
+            }
+            car_children = car_list["children"]
+            for car_child in car_children:
+                if car_child["name"] == make:
+                    car_child["children"].append(modelData)
+        elif (make in make_list and model in model_list and trim not in trim_list):
+            trim_list.append(trim)
+            trimData ={
+                    "name": trim,
+                    "price": result["price"]
+            }
+            for car_child in car_children:
+                if car_child["name"] == make:
+                    make_children = car_child["children"]
+                    for make_child in make_children:
+                        if make_child["name"] == model:
+                            make_child["children"].append(trimData)
+        elif (make in make_list and model in model_list and trim in trim_list):
+            pass   
+        
+
+
+
+
+
+
+
+        
 
 
     return jsonify(car_list)
