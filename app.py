@@ -45,10 +45,6 @@ def criteria():
 def comparison():  
     return render_template("comparison.html")
 
-@app.route("/sellingPrice")
-def sellingPrice():  
-    return render_template("sellingPrice.html")
-
 
 @app.route('/price_bin')
 def price_bin():
