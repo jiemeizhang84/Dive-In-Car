@@ -112,8 +112,11 @@ function addCar() {
     console.log(model);
     console.log(year);
 
-    
+    allPlot(make,model,year)
 
+};
+
+function allPlot(make,model,year) {
     Plotly.d3.json(`/car_by_comparison/${make}/${model}/${year}`, function(error, results) {
 
         console.log(results);
@@ -159,9 +162,7 @@ function addCar() {
         document.getElementById('year-selected-comparison').value = '';
  
     });
-
-
-};
+}
 
 
 function updateSearch() {
@@ -460,167 +461,224 @@ function updateBarPlot(year,make,model) {
 };
 
 function treePlot(price, mileage, year) {
-        // Set the dimensions and margins of the diagram
-    var margin = {top: 20, right: 90, bottom: 30, left: 90},
-    width = 900 - margin.left - margin.right,
+    var margin = {top: 20, right: 120, bottom: 20, left: 120},
+    width = 1100 - margin.right - margin.left,
     height = 500 - margin.top - margin.bottom;
 
-    // append the svg object to the body of the page
-    // appends a 'group' element to 'svg'
-    // moves the 'group' element to the top left margin
-    var svg = d3.select("#treeChart").append("svg")
-    .attr("width", width + margin.right + margin.left)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform", "translate("
-        + margin.left + "," + margin.top + ")");
-
-    var i = 0,
+var i = 0,
     duration = 750,
     root;
 
-    // declares a tree layout and assigns the size
-    var treemap = d3.tree().size([height, width]);
+var treemap = d3.tree()
+    .size([height, width]);
 
-    d3.json(`car_by_criteria_tree/${price}/${mileage}/${year}`,function(error,data){
-    if (error) throw error;
-    root = d3.hierarchy(data, function(d) { return d.children; });
-    root.x0 = height / 2;
-    root.y0 = 0;
+var svg = d3.select("#treeChart").append("svg")
+    .attr("width", width + margin.right + margin.left)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    function collapse(d) {
-        if(d.children) {
-            d._children = d.children
-            d._children.forEach(collapse)
-            d.children = null
-        }
+ var experienceName = ["","low","Very Low","Moderate","High","Expensive"];
+    var formatSkillPoints = function (d) {
+        return experienceName[d % 6];
     }
-    root.children.forEach(collapse);
+    var xScale =  d3.scaleLinear()
+            .domain([0,100000])
+            .range([0, 400]);
 
-    update(root);
+    var xAxis = d3.axisTop()
+            .scale(xScale)
+            .ticks(6)
+            // .tickFormat(formatSkillPoints);
 
-    })
+
+d3.json(`car_by_criteria_tree/${price}/${mileage}/${year}` , function(error, data) {
+  if (error) throw error;
+
+  root = d3.hierarchy(data,function(d){ return d.children;});
+  root.x0 = height / 2;
+  root.y0 = 0;
+
+  function collapse(d) {
+    if (d.children) {
+      d._children = d.children;
+      d._children.forEach(collapse);
+      d.children = null;
+    }
+  }
+  console.log(data.children[0].children[0].children[0].price)
+  root.children.forEach(collapse);
+  update(root);
+});
 
 
-    function update(source) {
+function update(source) {
 
-    // Assigns the x and y position for the nodes
-    var data = treemap(root);
+    var data= treemap(root);
+  // Compute the new tree layout.
+  var nodes = data.descendants(),
+      links = data.descendants().slice(1);
+  // Normalize for fixed-depth.
+  nodes.forEach(function(d) { d.y = d.depth * 180; });
 
-    // Compute the new tree layout.
-    var nodes = data.descendants(),
-    links = data.descendants().slice(1);
+  // Update the nodes…
+  var node = svg.selectAll("g.node")
+      .data(nodes, function(d) { return d.id || (d.id = ++i); });
 
-    // Normalize for fixed-depth.
-    nodes.forEach(function(d){ d.y = d.depth * 180});
+  var color = d3.scaleOrdinal(d3.schemeCategory20);
+  // Enter any new nodes at the parent's previous position.
+  var nodeEnter = node.enter().append("g")
+      .attr("class",function(d){
+          return "node" + (d._children||d.children? " node--internal":" node--leaf")})
+      .attr("transform", function(d) { 
+          return "translate(" + source.y0 + "," + source.x0 + ")"; })
+      .on("click", click);
+  
+  nodeEnter.append("circle")
+      .attr("r", 1e-6)
+      .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
 
-    // ****************** Nodes section ***************************
+  nodeEnter.append("text")
+      .attr("x", function(d) { return d.children || d._children ? -10 : -35; })
+      .attr("y", function(d) { return d.children || d._children ? -5 : -10; })
+      .attr("dy", ".35em")
+      .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+      .text(function(d) { return d.data.name; })
+      .style("fill-opacity", 1e-6);
+      var leafNodeG = d3.selectAll(".node--leaf")
+                .append("g")
+                .attr("class", "node--leaf-g")
+                ;
 
-    // Update the nodes...
-    var node = svg.selectAll('g.node')
-    .data(nodes, function(d) {return d.id || (d.id = ++i); });
+        leafNodeG.append("rect")
+                .attr("class","shadow")
+                .attr("x",9)
+                .attr("y",-5)
+                .style("fill",  function(d) { return color(d.data.name); })
+                .attr("width", 2)
+                .attr("height", 10)
+                .attr("rx", 2)
+                .attr("ry", 2)
+                .attr("width", function (d) {if(d.data.price){ return xScale(d.data.price)};})
+                    ;
+        
+          
+       
+        d3.selectAll(".node--leaf-g")
+                .on("mouseover", handleMouseOver)
+                .on("mouseout", handleMouseOut);
+        
+        function handleMouseOver(d) {
+            
+            var leafG = d3.select(this);
 
-    // Enter any new modes at the parent's previous position.
-    var nodeEnter = node.enter().append('g')
-    .attr('class', 'node')
-    .attr("transform", function(d) {
-        return "translate(" + source.y0 + "," + source.x0 + ")";
-    })
-    .on('click', click);
+            leafG.select("rect")
+                    .attr("stroke","#6DB33F")
+                    .attr("stroke-width","2");
 
-    // Add Circle for the nodes
-    nodeEnter.append('circle')
-    .attr('class', 'node')
-    .attr('r', 1e-6)
-    .style("fill", function(d) {
-        return d._children ? "lightsteelblue" : "#fff";
-    });
+            var ballG = svg.insert("g")
+                .attr("class","ballG")
+                .attr("transform", "translate(" + 1300 + "," + height/2 + ")");
 
-    // Add labels for the nodes
-    nodeEnter.append('text')
-    .attr("dy", ".35em")
-    .attr("x", function(d) {
-        return d.children || d._children ? -13 : 13;
-    })
-    .attr("text-anchor", function(d) {
-        return d.children || d._children ? "end" : "start";
-    })
-    .text(function(d) { return d.data.name; });
+        ballG.insert("circle")
+                .attr("class","shadow")
+                .style("fill","red")
+                .attr("r", 10);
 
-    // UPDATE
-    var nodeUpdate = nodeEnter.merge(node);
+        ballG.insert("text")
+                .style("text-anchor", "middle")
+                .attr("dy",5)
+                .text("0.0");
+            var ballGMovement = ballG
+                    .attr("transform", "translate(" + (d.y
+                            + xScale(d.data.price) + 90) + ","
+                            + (d.x + 1.5) + ")");
+            var carprice=d.data.price
+            var carstring=carprice.toString()
+            ballGMovement.select("circle")
+                    .style("fill", color(d.data.name))
+                    .attr("r", 20);
 
-    // Transition to the proper position for the node
+            ballGMovement.select("text")
+                    
+                    .text(function(d){
+                        if(carstring.length > 5 ){
+                        return "$"+string(carstring.substring(0,3))+"k"}
+                        else {
+                            return "$"+(carstring.substring(0,2))+"k"
+                        }
+                    });
+        }
+        function handleMouseOut() {
+            
+            var leafG = d3.select(this);
+
+            leafG.select("rect")
+                    .attr("stroke-width","0");
+            var ballremoval=d3.selectAll(".ballG").remove();
+        
+        }
+
+    
+  // Transition nodes to their new position.
+  var nodeUpdate = nodeEnter.merge(node);
     nodeUpdate.transition()
-    .duration(duration)
-    .attr("transform", function(d) { 
-        return "translate(" + d.y + "," + d.x + ")";
-    });
+      .duration(duration)
+      .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
 
-    // Update the node attributes and style
-    nodeUpdate.select('circle.node')
-    .attr('r', 10)
-    .style("fill", function(d) {
-        return d._children ? "lightsteelblue" : "#fff";
-    })
-    .attr('cursor', 'pointer');
+  nodeUpdate.select("circle")
+      .attr("r", 4.5)
+      .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
 
+  nodeUpdate.select("text")
+      .style("fill-opacity", 1);
 
-    // Remove any exiting nodes
-    var nodeExit = node.exit().transition()
-    .duration(duration)
-    .attr("transform", function(d) {
-        return "translate(" + source.y + "," + source.x + ")";
-    })
-    .remove();
+  // Transition exiting nodes to the parent's new position.
+  var nodeExit = node.exit().transition()
+      .duration(duration)
+      .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
+      .remove();
 
-    // On exit reduce the node circles size to 0
-    nodeExit.select('circle')
-    .attr('r', 1e-6);
+  nodeExit.select("circle")
+      .attr("r", 1e-6);
 
-    // On exit reduce the opacity of text labels
-    nodeExit.select('text')
-    .style('fill-opacity', 1e-6);
+  nodeExit.select("text")
+      .style("fill-opacity", 1e-6);
 
-    // ****************** links section ***************************
+  // Update the links…
+  var link = svg.selectAll("path.link")
+      .data(links, function(d) { return d.id; });
 
-    // Update the links...
-    var link = svg.selectAll('path.link')
-    .data(links, function(d) { return d.id; });
+  // Enter any new links at the parent's previous position.
+  var linkEnter = link.enter().insert("path", "g")
+      .attr("class", "link")
+      .attr("d", function(d) {
+        var o = {x: source.x0, y: source.y0};
+        return diagonal(o, o);
+      });
 
-    // Enter any new links at the parent's previous position.
-    var linkEnter = link.enter().insert('path', "g")
-    .attr("class", "link")
-    .attr('d', function(d){
-        var o = {x: source.x0, y: source.y0}
-        return diagonal(o, o)
-    });
+  // Transition links to their new position.
+  var linkUpdate= linkEnter.merge(link);
+  linkUpdate.transition()
+      .duration(duration)
+      .attr("d", function(d){ return diagonal(d,d.parent)});
 
-    // UPDATE
-    var linkUpdate = linkEnter.merge(link);
+  // Transition exiting nodes to the parent's new position.
+  var linkExit = link.exit().transition()
+      .duration(duration)
+      .attr("d", function(d) {
+        var o = {x: source.x, y: source.y};
+        return diagonal(o,  o);
+      })
+      .remove();
 
-    // Transition back to the parent element position
-    linkUpdate.transition()
-    .duration(duration)
-    .attr('d', function(d){ return diagonal(d, d.parent) });
-
-    // Remove any exiting links
-    var linkExit = link.exit().transition()
-    .duration(duration)
-    .attr('d', function(d) {
-        var o = {x: source.x, y: source.y}
-        return diagonal(o, o)
-    })
-    .remove();
-
-    // Store the old positions for transition.
-    nodes.forEach(function(d){
+  // Stash the old positions for transition.
+  nodes.forEach(function(d) {
     d.x0 = d.x;
     d.y0 = d.y;
-    });
+  });
 
-    // Creates a curved (diagonal) path from parent to the child nodes
-    function diagonal(s, d) {
+function diagonal(s, d) {
 
     path = `M ${s.y} ${s.x}
             C ${(s.y + d.y) / 2} ${s.x},
@@ -628,20 +686,47 @@ function treePlot(price, mileage, year) {
             ${d.y} ${d.x}`
 
     return path
-    }
+}
+// Toggle children on click.
+function click(d) {
+  if (d.children) {
+    d._children = d.children;
+    d.children = null;
+  } else {
+    d.children = d._children;
+    d._children = null;
+  }
+  update(d);
+ }
+ function click2(n){
+     return{
+         value:+n.value
+     };
+ };
+}   
+var firstEndNode = svg.insert("g")
+                    .attr("class","xAxis")
+                    
+                    .attr("transform", "translate(" + 550 +"," + 5 + ")")
+                    .call(xAxis)
+                    ;
 
-    // Toggle children on click.
-    function click(d) {
-    if (d.children) {
-        d._children = d.children;
-        d.children = null;
-    } else {
-        d.children = d._children;
-        d._children = null;
-    }
-    update(d);
-    }
-    }
+            // tick mark for x-axis
+            firstEndNode.insert("g")
+                    .attr("class", "grid")
+                    
+                    .attr("transform", "translate(0," + (height) + ")")
+                    .call(d3.axisBottom()
+                            .scale(xScale)
+                            .ticks(5)
+                            .tickSize(-height, 0, 0)
+                            .tickFormat("")
+                    );  
+                    svg.selectAll(".grid").select("line")
+                .style("stroke-dasharray","20,1")
+                .style("stroke","black");
+        
+
 }
 
 function criteriaScatterPlot(price, mileage, year) {
@@ -652,7 +737,7 @@ function criteriaScatterPlot(price, mileage, year) {
     
     
       var chartmargin = { top: 80, right:100, bottom: 50, left:50 };
-      chartwidth = 900 - chartmargin.left - chartmargin.right,
+      chartwidth = 1100 - chartmargin.left - chartmargin.right,
       chartheight = 500 - chartmargin.top - chartmargin.bottom;
     
       var tooltip = d3.select("#criteriaScatterChart").append("div")
@@ -843,6 +928,14 @@ function criteriaScatterPlot(price, mileage, year) {
       });
 }
 
+function sendToCompare() {
+    document.location.replace('/comparison');
+    console.log(counter)
+    counter = counter + 1;
+    console.log(counter)
+    allPlot("honda","civic","2017")
+}
+
 
 function init() {
     getOptions();
@@ -850,11 +943,6 @@ function init() {
 
 // Initialize the dashboard
 init();
-
-var x = document.cookie;
-console.log(x);
-
-
 
 
 
