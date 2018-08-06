@@ -85,7 +85,7 @@ def car_by_criteria_scatter(price_bin,mileage_bin,year):
     total_tco = 0
     for result in results:
         make = result["make"].lower()
-        model = result["model"].lower()
+        model = str(result["model"]).lower()
         results_comp = db[str(year)].find({"brand": make,"model":model})
         for result_comp in results_comp:
             car = {
@@ -159,6 +159,7 @@ def car_by_criteria_tree(price_bin,mileage_bin,year):
                     car_child["children"].append(modelData)
         elif (make in make_list and model in model_list):
             trim_list = []
+            car_children = car_list["children"]
             for car_child in car_children:
                 if car_child["name"] == make:
                     make_children = car_child["children"]
