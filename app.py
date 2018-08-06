@@ -75,6 +75,45 @@ def car_by_criteria(price_bin,mileage_bin,year):
 
     return jsonify(car_list)
 
+@app.route('/car_by_criteria_scatter/<price_bin>/<mileage_bin>/<int:year>')
+def car_by_criteria_scatter(price_bin,mileage_bin,year):
+    results = db.cars.find({"price_bin": price_bin,"mileage_bin":mileage_bin,"year":year})
+    car_list = []
+    new_car_list = []
+    car_name = []
+    total_cash_price = 0
+    total_tco = 0
+    for result in results:
+        make = result["make"].lower()
+        model = result["model"].lower()
+        results_comp = db[str(year)].find({"brand": make,"model":model})
+        for result_comp in results_comp:
+            car = {
+                "car": result_comp["brand"] + " " + result_comp["model"],
+                "year": year,
+                "cash_price": int(result_comp["cash_price"]),
+                "true_cost": int(result_comp["owning_cost"]),
+                "Hicash": 0,
+                "Hicost": 0,
+            }
+            car_list.append(car)
+    for car in car_list:
+        if car["car"] not in car_name:
+            new_car_list.append(car)
+            total_cash_price += car["cash_price"]
+            total_tco += car["true_cost"]
+            car_name.append(car["car"])
+    avg_cash_price = total_cash_price / len(new_car_list)
+    avg_tco = total_tco / len(new_car_list)
+
+    for car in new_car_list:
+        car["Hicash"] = 1 - car["cash_price"]/avg_cash_price
+        car["Hicost"] = 1 - car["true_cost"]/avg_tco
+
+    return jsonify(new_car_list)
+
+
+
 @app.route('/car_by_criteria_tree/<price_bin>/<mileage_bin>/<int:year>')
 def car_by_criteria_tree(price_bin,mileage_bin,year):
     car_list = {
@@ -184,17 +223,6 @@ def car_by_comparison(make,model,year):
         car_list.append(car_result)
 
     return jsonify(car_list)
-
-# @app.route('/car_by_comparison')
-# def car_by_comparison():
-#     car_list = []
-#     results = db["2014"].find({"brand": "audi","model":"q5","year":"2014"})
-    
-#     for result in results:
-#         car_result = json.loads(json_util.dumps(result))
-#         car_list.append(car_result)
-
-#     return jsonify(car_list)
 
 
 if __name__ == "__main__":
