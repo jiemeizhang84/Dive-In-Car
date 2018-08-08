@@ -112,7 +112,12 @@ function addCar() {
     console.log(model);
     console.log(year);
 
-    allPlot(make,model,year)
+    
+    
+    allPlot(make,model,year);
+    
+
+    
 
 };
 
@@ -885,18 +890,27 @@ function criteriaScatterPlot(price, mileage, year) {
               if((s[0][0]>(chartwidth/2)) & (s[0][1]<(chartheight/2))){
               svg.select("#axis--x").attr("transform", "translate(0," +chartheight + ")");
               svg.select("#axis--y").attr("transform", "translate("-chartwidth + ",0)");
+              console.log(x.invert);
+              console.log(y.invert);
+              
               }
               else if ((s[0][0]>(chartwidth/2)) & (s[0][1]>(chartheight/2))) {
                   svg.select("#axis--x").attr("transform", "translate(0," -chartheight + ")");
                   svg.select("#axis--y").attr("transform", "translate("-chartwidth + ",0)");
+                  console.log(x);
+                  console.log(y);
               }
               else if ((s[0][0]<(chartwidth/2)) & (s[0][1]>(chartheight/2))) {
                   svg.select("#axis--x").attr("transform", "translate(0," -chartheight + ")");
                   svg.select("#axis--y").attr("transform", "translate("+chartwidth + ",0)");
+                  console.log(x);
+                  console.log(y);
               }
               else{
                   svg.select("#axis--x").attr("transform", "translate(0," +chartheight + ")");
                   svg.select("#axis--y").attr("transform", "translate("+chartwidth + ",0)");
+                  console.log(x);
+                  console.log(y);
               }
             
               scatter.select(".brush").call(brush.move, null);
@@ -929,16 +943,71 @@ function criteriaScatterPlot(price, mileage, year) {
 }
 
 function sendToCompare() {
-    document.location.replace('/comparison');
-    console.log(counter)
-    counter = counter + 1;
-    console.log(counter)
-    allPlot("honda","civic","2017")
-}
+    price = document.getElementById('price-selected').value;
+    mileage = document.getElementById('mileage-selected').value;
+    year = document.getElementById('year-selected').value;
+
+    d3.json(`car_by_criteria_send_to_compare/${price}/${mileage}/${year}`,function(error,carData){
+        if (error) throw error;
+        console.log(carData);
+
+        var make_list = [];
+        var model_list = [];
+        var year_list = [];
+
+        for (i=0;i<carData.length;i++) {
+            make_list.push(carData[i]['make']);
+            model_list.push(carData[i]['model']);
+            year_list.push(carData[i]['year']);           
+        };
+    
+    
+        document.location.replace('/comparison');
+
+        // var make_list = ['honda','toyota'];
+        // var model_list = ['civic','camry'];
+        // var year_list = ['2017','2017'];
+
+        localStorage.setItem('make',JSON.stringify(make_list));
+        localStorage.setItem('model',JSON.stringify(model_list));
+        localStorage.setItem('year',JSON.stringify(year_list));
+
+    });
+
+    
+    // localStorage.setItem('make', 'honda');
+    // localStorage.setItem('model', 'civic');
+    // localStorage.setItem('year', '2017');
+
+};
 
 
 function init() {
     getOptions();
+    // var make_criteria = localStorage.getItem('make');
+    // var model_criteria = localStorage.getItem('model');
+    // var year_criteria = localStorage.getItem('year');
+
+    var make_criteria = JSON.parse(localStorage.getItem("make"));
+    var model_criteria = JSON.parse(localStorage.getItem("model"));
+    var year_criteria = JSON.parse(localStorage.getItem("year"));
+
+    console.log(make_criteria);
+    if (make_criteria[0]) {
+        counter = counter + 1;
+        for (i=0;i<make_criteria.length;i++) {
+            allPlot(make_criteria[i],model_criteria[i],year_criteria[i])
+        }
+        
+        localStorage.clear();
+    };
+
+    // if (make_criteria[0]) {
+    //     counter = counter + 1;
+    //     allPlot(make_criteria,model_criteria,year_criteria)
+    //     localStorage.clear();
+    // }
+    
 };
 
 // Initialize the dashboard

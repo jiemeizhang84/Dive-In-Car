@@ -221,6 +221,27 @@ def car_by_comparison(make,model,year):
 
     return jsonify(car_list)
 
+@app.route('/car_by_criteria_send_to_compare/<price_bin>/<mileage_bin>/<int:year>')
+def car_by_criteria_send_to_compare(price_bin,mileage_bin,year):
+    results = db.cars.find({"price_bin": price_bin,"mileage_bin":mileage_bin,"year":year})
+    car_list = []
+    check_model = []
+    
+    for result in results:
+        make = result["make"].lower()
+        model = str(result["model"]).lower()
+        results_comp = db[str(year)].find({"brand": make,"model":model})
+        for result_comp in results_comp:
+            if result_comp["model"] not in check_model:
+                check_model.append(result_comp["model"])
+                car = {
+                    "make": result_comp["brand"],
+                    "model": result_comp["model"],
+                    "year": year,               
+                }
+                car_list.append(car)
+    return jsonify(car_list)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
